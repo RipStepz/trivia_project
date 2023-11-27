@@ -1,11 +1,16 @@
 <!-- finalizar_juego.html -->
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Finalizar Juego</title>
 </head>
 <body>
-    <h2>¡Juego finalizado!</h2>
-    <p>{{ jugador_temporal.nombre }}, has obtenido un puntaje de {{ puntaje_acumulado }} puntos.</p>
+    <h1>¡Juego finalizado!</h1>
+    <p>Gracias por jugar. Tu puntaje acumulado es: {{ jugador_temporal.puntaje }}</p>
+
+    <!-- Aquí puedes agregar más contenido, como un botón para reiniciar el juego o regresar a la página de inicio -->
+    <a href="{% url 'inicio' %}">Volver a jugar</a>
 </body>
 </html>

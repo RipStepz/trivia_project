@@ -13,7 +13,6 @@ def inicio(request):
 
     return render(request, 'inicio.html')
 
-
 def preguntas(request, numero_pregunta):
     jugador_temporal_id = request.session.get('jugador_temporal_id')
     puntaje_acumulado = request.session.get('puntaje_acumulado', 0)
@@ -22,49 +21,58 @@ def preguntas(request, numero_pregunta):
         pregunta_actual = Pregunta.objects.get(id=request.POST['numero_pregunta'])
         opcion_seleccionada = request.POST['respuesta_' + str(pregunta_actual.id)]
 
-        if opcion_seleccionada == 'mala':
-            puntaje_acumulado += pregunta_actual.puntaje_mala
-        elif opcion_seleccionada == 'media':
-            puntaje_acumulado += pregunta_actual.puntaje_media
-        elif opcion_seleccionada == 'buena':
-            puntaje_acumulado += pregunta_actual.puntaje_buena
+        # Asegurémonos de que las opciones sean válidas
+        if opcion_seleccionada in ['mala', 'media', 'buena']:
+            if opcion_seleccionada == 'mala':
+                puntaje_acumulado += pregunta_actual.puntaje_mala
+            elif opcion_seleccionada == 'media':
+                puntaje_acumulado += pregunta_actual.puntaje_media
+            elif opcion_seleccionada == 'buena':
+                puntaje_acumulado += pregunta_actual.puntaje_buena
 
-        request.session['puntaje_acumulado'] = puntaje_acumulado
+            request.session['puntaje_acumulado'] = puntaje_acumulado
 
-        jugador_temporal = JugadorTemporal.objects.get(id=jugador_temporal_id)
-        jugador_temporal.puntaje_acumulado = puntaje_acumulado
-        jugador_temporal.save()
+            # Actualizamos el puntaje acumulado en la base de datos temporal
+            jugador_temporal = JugadorTemporal.objects.get(id=jugador_temporal_id)
+            jugador_temporal.puntaje = puntaje_acumulado  # Corregido el nombre del atributo
+            jugador_temporal.save()
 
-        if numero_pregunta < 30:
-            return redirect('preguntas', numero_pregunta=numero_pregunta + 1)
-        else:
-            return redirect('finalizar_juego')
+            # Redirigimos a la próxima pregunta si aún no hemos llegado a la pregunta 30
+            if numero_pregunta < 30:
+                return redirect('preguntas', numero_pregunta=numero_pregunta + 1)
+            else:
+                # Si hemos respondido todas las preguntas, vamos a la página de finalización
+                return redirect('finalizar_juego')
+    
+    # Resto de la lógica para mostrar la pregunta actual
+    pregunta_actual = Pregunta.objects.get(id=numero_pregunta)
+    return render(request, 'preguntas.html', {'preguntas': [pregunta_actual], 'numero_pregunta': numero_pregunta})
 
-    else:
-        pregunta_actual = Pregunta.objects.get(id=numero_pregunta)
-        return render(request, 'preguntas.html', {'preguntas': [pregunta_actual], 'numero_pregunta': numero_pregunta, 'puntaje_acumulado': puntaje_acumulado})
 
-
+# Función de finalizar juego
 def finalizar_juego(request):
     jugador_temporal_id = request.session.get('jugador_temporal_id')
-    puntaje_acumulado = request.session.get('puntaje_acumulado', 0)
 
-    if not jugador_temporal_id:
-        return redirect('inicio')
+    if jugador_temporal_id:
+        jugador_temporal = JugadorTemporal.objects.get(id=jugador_temporal_id)
+        puntaje_acumulado = jugador_temporal.puntaje  # Corregido el nombre del atributo
 
-    jugador_temporal = JugadorTemporal.objects.get(id=jugador_temporal_id)
+        # Asegúrate de guardar el puntaje en la base de datos permanente antes de borrar el jugador temporal
+        jugador_permanente, created = JugadorPermanente.objects.get_or_create(nombre=jugador_temporal.nombre)
+        jugador_permanente.puntaje += puntaje_acumulado
+        jugador_permanente.save()
 
-    # Mostrar el puntaje acumulado
-    return render(request, 'finalizar_juego.html', {'puntaje_acumulado': puntaje_acumulado, 'jugador_temporal': jugador_temporal})
+        # Limpia la información temporal después de completar las 30 preguntas
+        request.session.pop('jugador_temporal_id', None)
 
-    # Operaciones en la base de datos permanente
-    jugador_permanente, created = JugadorPermanente.objects.get_or_create(nombre=jugador_temporal.nombre)
-    jugador_permanente.puntaje += puntaje_acumulado
-    jugador_permanente.save()
+        # Utiliza el método pop() solo si deseas eliminar la sesión puntaje_acumulado
+        # request.session.pop('puntaje_acumulado', None)
 
-    # Limpiar la información temporal después de completar las 30 preguntas
-    jugador_temporal.delete()
-    request.session.pop('jugador_temporal_id', None)
-    request.session.pop('puntaje_acumulado', None)
+        # Ahora puedes redirigir a la página final con el puntaje acumulado
+        return render(request, 'finalizar_juego.html', {'jugador_temporal': jugador_temporal})
+    else:
+        # Maneja el caso en que no se encuentra un jugador temporal
+        return render(request, 'error_sin_jugador_temporal.html')
+
 
 
