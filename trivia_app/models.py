@@ -18,3 +18,5 @@ class JugadorPermanente(models.Model):
     nombre = models.CharField(max_length=50)
     puntaje = models.IntegerField(default=0)
 
+    def __str__(self):
+        return self.nombre
