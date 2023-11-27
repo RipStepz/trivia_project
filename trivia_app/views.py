@@ -2,10 +2,28 @@
 from django.shortcuts import render, redirect
 from .models import Pregunta, JugadorTemporal, JugadorPermanente
 from django.http import HttpResponse
+from django.db import connections
+
+# def inicio(request):
+#     if request.method == 'POST':
+#         nombre_jugador = request.POST['nombre']
+#         jugador_temporal = JugadorTemporal.objects.create(nombre=nombre_jugador, puntaje=0)
+#         request.session['jugador_temporal_id'] = jugador_temporal.id
+#         request.session['puntaje_acumulado'] = 0
+#         return redirect('preguntas', numero_pregunta=1)
+
+#     return render(request, 'inicio.html')
 
 def inicio(request):
     if request.method == 'POST':
         nombre_jugador = request.POST['nombre']
+
+        # Cierra todas las conexiones a la base de datos temporal
+        connections['default'].close()
+        
+        # Borra la información temporal antes de crear un nuevo jugador temporal
+        JugadorTemporal.objects.all().delete()
+
         jugador_temporal = JugadorTemporal.objects.create(nombre=nombre_jugador, puntaje=0)
         request.session['jugador_temporal_id'] = jugador_temporal.id
         request.session['puntaje_acumulado'] = 0
@@ -49,7 +67,6 @@ def preguntas(request, numero_pregunta):
     return render(request, 'preguntas.html', {'preguntas': [pregunta_actual], 'numero_pregunta': numero_pregunta})
 
 
-# Función de finalizar juego
 def finalizar_juego(request):
     jugador_temporal_id = request.session.get('jugador_temporal_id')
 
@@ -73,6 +90,4 @@ def finalizar_juego(request):
     else:
         # Maneja el caso en que no se encuentra un jugador temporal
         return render(request, 'error_sin_jugador_temporal.html')
-
-
 
