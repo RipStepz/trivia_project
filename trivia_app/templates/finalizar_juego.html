@@ -1,0 +1,15 @@
+<!-- finalizar_juego.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Finalizar Juego</title>
+</head>
+<body>
+    {% if jugador_temporal_id %}
+        <h2>¡Juego finalizado!</h2>
+        <p>Puntaje acumulado: {{ puntaje_acumulado }}</p>
+    {% else %}
+        <p>Error: No se encontró un jugador temporal.</p>
+    {% endif %}
+</body>
+</html>

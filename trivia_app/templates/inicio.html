@@ -1,0 +1,16 @@
+<!-- trivia_app/templates/inicio.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Inicio</title>
+</head>
+<body>
+    <h2>Ingresa tu nombre para comenzar:</h2>
+    <form method="post" action="{% url 'inicio' %}">
+        {% csrf_token %}
+        <label for="nombre">Nombre:</label>
+        <input type="text" name="nombre" required>
+        <input type="submit" value="Comenzar">
+    </form>
+</body>
+</html>

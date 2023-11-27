@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Preguntas</title>
+</head>
+<body>
+    <h2>{{ jugador_temporal.nombre }}, responde las preguntas:</h2>
+    <form method="post" action="{% url 'preguntas' numero_pregunta=numero_pregunta %}">
+        {% csrf_token %}
+        {% for pregunta in preguntas %}
+            <h3>{{ pregunta.enunciado }}</h3>
+            <label><input type="radio" name="respuesta_{{ pregunta.id }}" value="mala"> {{ pregunta.opcion_mala }}</label><br>
+            <label><input type="radio" name="respuesta_{{ pregunta.id }}" value="media"> {{ pregunta.opcion_media }}</label><br>
+            <label><input type="radio" name="respuesta_{{ pregunta.id }}" value="buena"> {{ pregunta.opcion_buena }}</label><br>
+            <hr>
+            <input type="hidden" name="numero_pregunta" value="{{ numero_pregunta }}">
+        {% endfor %}
+        {% if numero_pregunta < 30 %}
+            <input type="submit" value="Siguiente pregunta">
+        {% else %}
+            <input type="submit" value="Finalizar juego">
+        {% endif %}
+    </form>
+</body>
+</html>
