@@ -5,11 +5,7 @@
     <title>Finalizar Juego</title>
 </head>
 <body>
-    {% if jugador_temporal_id %}
-        <h2>¡Juego finalizado!</h2>
-        <p>Puntaje acumulado: {{ puntaje_acumulado }}</p>
-    {% else %}
-        <p>Error: No se encontró un jugador temporal.</p>
-    {% endif %}
+    <h2>¡Juego finalizado!</h2>
+    <p>{{ jugador_temporal.nombre }}, has obtenido un puntaje de {{ puntaje_acumulado }} puntos.</p>
 </body>
 </html>
