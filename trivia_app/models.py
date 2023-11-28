@@ -13,6 +13,7 @@ class Pregunta(models.Model):
 class JugadorTemporal(models.Model):
     nombre = models.CharField(max_length=50)
     puntaje = models.IntegerField(default=0)
+    PutanjeRonda = models.IntegerField(default=0)
 
 class JugadorPermanente(models.Model):
     nombre = models.CharField(max_length=50)
