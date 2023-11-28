@@ -5,7 +5,7 @@
 </head>
 <body>
     <h2>{{ jugador_temporal.nombre }}, responde las preguntas:</h2>
-    <form method="post" action="{% url 'preguntas' numero_pregunta=numero_pregunta %}">
+    <form method="post" action="{% url 'obtener_preguntas_categoria' numero_pregunta=numero_pregunta %}">
         {% csrf_token %}
         {% for pregunta in preguntas %}
             <h3>{{ pregunta.enunciado }}</h3>
