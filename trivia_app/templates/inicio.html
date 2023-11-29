@@ -9,15 +9,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 </head>
 <body>
-    <h2>¡Bienvenido a Aprende Verde!</h2>
-    <div class='form-container'>
-        <h3>Ingresa tu nombre para comenzar:</h2>
-        <form method="post" action="{% url 'inicio' %}">
-            {% csrf_token %}
-            <label for="nombre">Nombre:</label>
-            <input type="text" name="nombre" required>
-            <input type="submit" value="Comenzar" class="start-btn">
-        </form>
-    </div>
+    <h2>Ingresa tu nombre para comenzar:</h2>
+    <form method="post" action="{% url 'inicio' %}">
+        {% csrf_token %}
+        <label for="nombre">Nombre:</label>
+        <input type="text" name="nombre" required>
+        <input type="submit" value="Comenzar">
+    </form>
 </body>
 </html>
