@@ -15,6 +15,18 @@ def obtener_categoria(puntaje_ronda):
     elif 6 < puntaje_ronda <= 9:
         return PreguntaAlta
     
+def obtener_mensaje_segun_puntaje(puntaje):
+    if 15 <= puntaje < 25:
+        return "Has tomado malas decisiones para cuidar el medio ambiente."
+    elif 25 <= puntaje < 40:
+        return "Has tomado decisiones neutras para el medio ambiente."
+    elif 40 <= puntaje < 45:
+        return "Has cuidado el medio ambiente. ¡Bien hecho!"
+    elif puntaje >= 45:
+        return "¡Eres un defensor del medio ambiente! Has tomado decisiones excepcionales."
+    else:
+        return "Mensaje por defecto o sin definir para este rango."
+    
 def obtener_preguntas_categoria(request, numero_pregunta):
     
     jugador_temporal_id = request.session.get('jugador_temporal_id')
@@ -161,8 +173,11 @@ def finalizar_juego(request):
         # Limpia la información temporal después de completar las 30 preguntas
         request.session.pop('jugador_temporal_id', None)
 
+        # Obtener el mensaje según el puntaje
+        mensaje = obtener_mensaje_segun_puntaje(puntaje_acumulado)
+
         # Renderiza la página final con la información del jugador y el leaderboard
-        return render(request, 'finalizar_juego.html', {'jugador_temporal': jugador_temporal, 'leaderboard': leaderboard})
+        return render(request, 'finalizar_juego.html', {'jugador_temporal': jugador_temporal, 'leaderboard': leaderboard, 'mensaje': mensaje})
     else:
         # Maneja el caso en que no se encuentra un jugador temporal
         return render(request, 'error_sin_jugador_temporal.html')

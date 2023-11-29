@@ -10,6 +10,9 @@
     <h1>¡Juego finalizado!</h1>
     <p>Gracias por jugar. Tu puntaje acumulado es: {{ jugador_temporal.puntaje }}</p>
 
+    <!-- Mostrar mensaje según la categoría de puntaje -->
+    <p>{{ mensaje }}</p>
+
     <!-- Mostrar leaderboard -->
     <h2>Leaderboard</h2>
     <ul>
@@ -18,7 +21,7 @@
         {% endfor %}
     </ul>
 
-    <!-- Aquí puedes agregar más contenido, como un botón para reiniciar el juego o regresar a la página de inicio -->
+    <!-- Botón para reiniciar el juego o regresar a la página de inicio -->
     <a href="{% url 'inicio' %}">Volver a jugar</a>
 </body>
 </html>
