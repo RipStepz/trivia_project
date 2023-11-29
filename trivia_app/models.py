@@ -14,6 +14,8 @@ class JugadorTemporal(models.Model):
     nombre = models.CharField(max_length=50)
     puntaje = models.IntegerField(default=0)
     PutanjeRonda = models.IntegerField(default=0)
+    Comdin = models.IntegerField(default=0)
+    Preguntas = models.IntegerField(default=1)
 
 class JugadorPermanente(models.Model):
     nombre = models.CharField(max_length=50)
