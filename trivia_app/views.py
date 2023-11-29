@@ -3,7 +3,6 @@ from django.shortcuts import render, redirect
 from .models import Pregunta, JugadorTemporal, JugadorPermanente, PreguntaBaja, PreguntaMedia, PreguntaAlta
 from django.http import HttpResponse
 from django.db import connections
-puntaje_debug = 0
 def obtener_categoria(puntaje_ronda):
 
     if 0 <= puntaje_ronda < 3:
@@ -15,13 +14,15 @@ def obtener_categoria(puntaje_ronda):
     elif 6 <= puntaje_ronda <= 9:
         return PreguntaAlta
    
-def obtener_preguntas_categoria(request, numero_pregunta, puntaje_debug):
+def obtener_preguntas_categoria(request, numero_pregunta):
     
     jugador_temporal_id = request.session.get('jugador_temporal_id')
     puntaje_acumulado = request.session.get('puntaje_acumulado', 0)
     puntaje_ronda = request.session.get('PutanjeRonda', 0)
     # Obtener las preguntas de la categoría correspondiente
     categoria_actual = obtener_categoria(puntaje_ronda)
+    print("categoria problematica")
+    print(str(categoria_actual))
     preguntas_categoria = categoria_actual.objects.all()
     
     if request.method == 'POST':
@@ -40,13 +41,19 @@ def obtener_preguntas_categoria(request, numero_pregunta, puntaje_debug):
         if opcion_seleccionada in ['mala', 'media', 'buena']:
             if opcion_seleccionada == 'mala':
                 puntaje_acumulado += pregunta_actual.puntaje_mala
-                puntaje_debug += pregunta_actual.puntaje_mala
+                jugador_temporal = JugadorTemporal.objects.get(id=jugador_temporal_id)
+                jugador_temporal.PutanjeRonda += pregunta_actual.puntaje_mala
+                jugador_temporal.save()
             elif opcion_seleccionada == 'media':
                 puntaje_acumulado += pregunta_actual.puntaje_media
-                puntaje_debug += pregunta_actual.puntaje_media
+                jugador_temporal = JugadorTemporal.objects.get(id=jugador_temporal_id)
+                jugador_temporal.PutanjeRonda += pregunta_actual.puntaje_media
+                jugador_temporal.save()
             elif opcion_seleccionada == 'buena':
                 puntaje_acumulado += pregunta_actual.puntaje_buena
-                puntaje_debug += pregunta_actual.puntaje_buena
+                jugador_temporal = JugadorTemporal.objects.get(id=jugador_temporal_id)
+                jugador_temporal.PutanjeRonda += pregunta_actual.puntaje_buena
+                jugador_temporal.save()
 
             request.session['puntaje_acumulado'] = puntaje_acumulado
 
@@ -54,11 +61,9 @@ def obtener_preguntas_categoria(request, numero_pregunta, puntaje_debug):
             jugador_temporal = JugadorTemporal.objects.get(id=jugador_temporal_id)
             jugador_temporal.puntaje = puntaje_acumulado
             jugador_temporal.save()
-
-            jugador_temporal = JugadorTemporal.objects.get(id=jugador_temporal_id)
             
-            jugador_temporal.PutanjeRonda = puntaje_debug
-            jugador_temporal.save()
+            #jugador_temporal.PutanjeRonda = puntaje_debug
+            
 
             print("puntaje ronda")
             print(int(jugador_temporal.PutanjeRonda))
@@ -79,9 +84,9 @@ def obtener_preguntas_categoria(request, numero_pregunta, puntaje_debug):
                     print("categoria en % 3")
                     print(str(categoria_actual))
                     JugadorTemporal.objects.all().update(PutanjeRonda=0)
-                    puntaje_debug = 0
+                    puntaje_debug = jugador_temporal.PutanjeRonda
                     print("puntaje en %3 post borrar")
-                    print(int(jugador_temporal.PutanjeRnda))
+                    print(int(jugador_temporal.PutanjeRonda))
 
                 return redirect('obtener_preguntas_categoria', numero_pregunta=int(pregunta_actual_id) + 1)
             
