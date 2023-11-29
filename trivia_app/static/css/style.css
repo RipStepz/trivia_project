@@ -1,0 +1,46 @@
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    font-family: Palatino;
+    background: linear-gradient(245.59deg, #4d9559 0%, #38703d 28.53%, #133917 75.52%);
+    margin: 0;
+    padding: 20px;
+    background-size: cover;
+    min-height: 100vh;
+}
+h1 {
+    font-family: "Permanent Marker", cursive;
+    margin-top: 150px;
+    font-size: 55px;
+    line-height: 1;
+    color: white;
+}
+h2 {
+    font-family: "Permanent Marker", cursive;
+    margin-top: 150px;
+    font-size: 45px;
+    line-height: 1;
+    color: white;
+}
+.form-container {
+    width: 350px;
+    height: 150px;
+    align-content: center;
+    background: white;
+    border-radius: 10px;
+    position: aboslute;
+    text-align: center;
+    padding: 0 30px 30px;
+    color: #1f1f1f;
+    margin: 0 auto;
+    margin-top: 15px;
+}
+.start-btn{
+    cursor: pointer
+}
+.form-container h3{
+    font-size: 23px;
+    margin-bottom: 45px;
+}

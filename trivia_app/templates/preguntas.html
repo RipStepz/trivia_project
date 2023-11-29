@@ -1,7 +1,11 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
     <title>Preguntas</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 </head>
 <body>
     <h2>{{ jugador_temporal.nombre }}, responde las preguntas:</h2>
@@ -16,9 +20,9 @@
             <input type="hidden" name="numero_pregunta" value="{{ numero_pregunta }}">
         {% endfor %}
         {% if numero_pregunta < 30 %}
-            <input type="submit" value="Siguiente pregunta">
+            <input type="submit" value="Siguiente pregunta" class="start-btn">
         {% else %}
-            <input type="submit" value="Finalizar juego">
+            <input type="submit" value="Finalizar juego" class="start-btn">
         {% endif %}
     </form>
 </body>
