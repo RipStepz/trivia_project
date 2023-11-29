@@ -5,7 +5,8 @@
     <title>Inicio</title>
 </head>
 <body>
-    <h2>Ingresa tu nombre para comenzar:</h2>
+    <h2>Bienvenido a Aprende Verde </h2>
+    <h3>Ingresa tu nombre para comenzar:</h3>
     <form method="post" action="{% url 'inicio' %}">
         {% csrf_token %}
         <label for="nombre">Nombre:</label>
