@@ -22,7 +22,7 @@ def obtener_preguntas_categoria(request, numero_pregunta):
     puntaje_ronda = request.session.get('PutanjeRonda', 0)
     
     # Obtener las preguntas de la categoría correspondiente
-    
+
     obtener_numeroP = JugadorTemporal.objects.first()
     NumeroP = obtener_numeroP.Preguntas
 
@@ -87,7 +87,7 @@ def obtener_preguntas_categoria(request, numero_pregunta):
             print("puntaje acumulado")
             print(puntaje_acumulado)
             # Redirigimos a la próxima pregunta si aún no hemos llegado a la pregunta 30
-            if int(pregunta_actual_id) < 30:
+            if int(pregunta_actual_id) < 15:
                 #print(pregunta_actual_id)
                 # if int(pregunta_actual_id) == 1:
                 #     categoria_actual = Pregunta
